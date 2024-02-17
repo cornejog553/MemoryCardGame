@@ -1,0 +1,46 @@
+import { useState, useEffect } from 'react';
+import './App.css'
+
+function App() {
+
+    // Setting state for photos array
+    const [photos, setPhotos] = useState([]);
+
+    // useEffect to make the API call and retrieve 12 images from unsplash
+    useEffect(() => {
+      fetch('https://api.unsplash.com/photos/random?client_id=6MVPc9DBKEFO7ehGJspBB5NWvIqsHKOqeyXhwhSHAeo&page=1&query=basketball&count=12')
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          setPhotos(data);
+        });
+    }, []);
+
+
+    // Function that will shuffle the photos. To be used with on click of each image
+    const shufflePhotos = () => {
+      for (let i = photos.length; --i;)  {
+          let j = Math.floor(Math.random() * (i + 1));
+          [photos[i], photos[j]] = [photos[j], photos[i]]
+      }
+      setPhotos([...photos]);
+  }
+
+  return (
+    <>
+      <h1>Memory Card Game</h1>
+      <p>
+        Get points by clicking on an image but dont click on any more than once
+      </p>
+      {/* Mapping the photos array */}
+      {photos.map((photo) => (
+        <img key={photo.id} src={photo.urls.small} alt={photo.description} height={300} onClick={shufflePhotos}/>
+      ))}
+    </>
+  )
+}
+
+
+export default App
